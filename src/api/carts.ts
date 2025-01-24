@@ -2,7 +2,7 @@ import axiosInstance from "@/lib/fetch";
 import { ProductType } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 
-export const getCartProducts = async () => {
+export const getCartProducts = async (): Promise<any> => {
   const response = await axiosInstance.get(`/carts/1`);
   return response;
 };
