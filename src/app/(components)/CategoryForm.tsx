@@ -52,7 +52,6 @@ const CategoryForm = ({
     onSuccess: () => {
       setOpen(false);
       form.reset();
-      addCategory(form.getValues("name"));
       toast.success("Категория успешно изменена");
     },
     onError: () => {
@@ -75,7 +74,13 @@ const CategoryForm = ({
   };
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
+    <Sheet
+      open={open}
+      onOpenChange={() => {
+        setOpen(false);
+        form.reset();
+      }}
+    >
       <SheetContent>
         <SheetHeader>
           <SheetTitle className="text-2xl mb-10">
@@ -97,25 +102,55 @@ const CategoryForm = ({
               {form.formState.errors.name?.message}
             </p>
             {category ? (
-              <button
-                disabled={mutationEdit.isPending}
-                className={`bg-[#28b392] hover:bg-[#28b392] text-white px-4 py-2 rounded-md w-full ${
-                  mutationEdit.isPending ? "opacity-50 cursor-not-allowed" : ""
-                }`}
-              >
-                Сохранить
-              </button>
+              <div>
+                <button
+                  disabled={mutationEdit.isPending}
+                  className={`bg-[#28b392] hover:bg-[#28b392] text-white px-4 py-2 rounded-md w-full ${
+                    mutationEdit.isPending
+                      ? "opacity-50 cursor-not-allowed"
+                      : ""
+                  }`}
+                >
+                  Сохранить
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setOpen(false)}
+                  disabled={mutationEdit.isPending}
+                  className={`bg-[#FF5C5C] hover:bg-[#FF5C5C] text-white px-4 py-2 rounded-md w-full ${
+                    mutationEdit.isPending
+                      ? "opacity-50 cursor-not-allowed"
+                      : ""
+                  }`}
+                >
+                  Отменить
+                </button>
+              </div>
             ) : (
-              <button
-                disabled={mutationCreate.isPending}
-                className={`bg-[#28b392] hover:bg-[#28b392] text-white px-4 py-2 rounded-md w-full ${
-                  mutationCreate.isPending
-                    ? "opacity-50 cursor-not-allowed"
-                    : ""
-                }`}
-              >
-                Создать
-              </button>
+              <div className="flex gap-4">
+                <button
+                  disabled={mutationCreate.isPending}
+                  className={`bg-[#28b392] hover:bg-[#28b392] text-white px-4 py-2 rounded-md w-full ${
+                    mutationCreate.isPending
+                      ? "opacity-50 cursor-not-allowed"
+                      : ""
+                  }`}
+                >
+                  Создать
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setOpen(false)}
+                  disabled={mutationCreate.isPending}
+                  className={`bg-[#FF5C5C] hover:bg-[#FF5C5C] text-white px-4 py-2 rounded-md w-full ${
+                    mutationCreate.isPending
+                      ? "opacity-50 cursor-not-allowed"
+                      : ""
+                  }`}
+                >
+                  Отменить
+                </button>
+              </div>
             )}
           </Form>
         </form>

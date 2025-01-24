@@ -9,4 +9,5 @@ export type ProductType = {
   thumbnail: string;
   title: string;
   description: string;
+  category: string;
 }

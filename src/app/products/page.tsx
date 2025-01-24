@@ -1,5 +1,5 @@
 "use client";
-import { deleteCategory, getCategories, useCategories } from "@/api/categories";
+import { deleteCategory, useCategories } from "@/api/categories";
 import {
   Table,
   TableBody,
@@ -12,68 +12,73 @@ import React, { useEffect, useState } from "react";
 import Loader from "../(components)/Loader";
 import NoList from "../(components)/NoList";
 import toast from "react-hot-toast";
-import BaseIcon from "@/components/icons/BaseIcon";
-import CategoryForm from "../(components)/CategoryForm";
 import { useMainState } from "@/lib/store";
 import { useMutation } from "@tanstack/react-query";
+import { deleteProduct, useProducts } from "@/api/products";
+import { ProductType } from "@/lib/types";
+import BaseIcon from "@/components/icons/BaseIcon";
+import ProductForm from "../(components)/ProductForm";
 
 const page = () => {
-  const { categories, setCategories, removeCategory, addCategory } =
-    useMainState();
-  const [currentCategory, setCurrentCategory] = useState<string>("");
-  const { data, isLoading, error } = useCategories();
+  const { products, setProducts, removeProduct, addProduct } = useMainState();
+  const [currentProduct, setCurrentProduct] = useState<ProductType | null>(
+    null
+  );
+  const { data, isLoading, error } = useProducts();
+  const { data: categories, isLoading: loadingCategories } = useCategories();
   const [open, setOpen] = useState<boolean>(false);
   if (error) {
     toast.error("Произошла ошибка при получении категорий");
   }
 
   const mutation = useMutation({
-    mutationFn: (id: number) => deleteCategory(id + 1),
+    mutationFn: (id: number) => deleteProduct(id),
     onSuccess: () => {
-      setCurrentCategory("");
-      toast.success("Категория успешно удалена");
+      if (currentProduct) {
+        addProduct(currentProduct);
+        setCurrentProduct(null);
+      }
+      toast.success("Товар успешно удалена");
     },
-
     onError: () => {
-      addCategory(currentCategory);
-      toast.error("Произошла ошибка при удалении категории");
+      toast.error("Произошла ошибка при удалении товара");
     },
   });
 
   useEffect(() => {
     if (data) {
-      setCategories(data);
+      setProducts(data.products);
     }
   }, [data]);
 
   useEffect(() => {
     if (!open) {
-      setCurrentCategory("");
+      setCurrentProduct(null);
     }
   }, [open]);
 
-  function handleDelete(item: string, id: number) {
-    setCurrentCategory(item);
-    removeCategory(item);
+  function handleDelete(item: ProductType, id: number) {
+    setCurrentProduct(item);
+    removeProduct(item);
     mutation.mutate(Number(id));
   }
 
   return (
     <div>
-      <h2 className="text-3xl font-semibold mb-8">Категории </h2>
+      <h2 className="text-3xl font-semibold mb-8">Товары </h2>
       <div className="bg-white border border-[#E5E7EB] rounded-xl min-h-screen">
         <div className="py-3 px-6 border-b border-[#E5E7EB] flex justify-end items-center">
           <button
             onClick={() => setOpen(true)}
             className="bg-[#28b392] hover:bg-[#28b392] text-white px-4 py-2 rounded-md"
           >
-            Создать категорию
+            Создать товар
           </button>
         </div>
 
         {isLoading ? (
           <Loader className="h-[calc(100vh-200px)]" />
-        ) : categories && categories.length === 0 ? (
+        ) : products && products.length === 0 ? (
           <NoList className="h-[calc(100vh-200px)]" />
         ) : (
           <>
@@ -82,21 +87,24 @@ const page = () => {
                 <TableRow>
                   <TableHead className="w-[100px]">№</TableHead>
                   <TableHead className="text-center">Наименование </TableHead>
+                  <TableHead className="text-center">Категория </TableHead>
                   <TableHead className="text-center"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {categories?.map((item: string, index: number) => (
-                  <TableRow key={index}>
-                    <TableCell className="font-semibold">{index + 1}</TableCell>
-                    <TableCell className="font-semibold w-full text-center">
-                      {item}
+                {products?.map((item: ProductType) => (
+                  <TableRow key={item.id}>
+                    <TableCell className="font-semibold">{item.id}</TableCell>
+                    <TableCell className="font-semibold text-center">
+                      {item.title}
                     </TableCell>
-
-                    <TableCell className="font-semibold flex space-x-4">
+                    <TableCell className="font-semibold text-center">
+                      {item.category}
+                    </TableCell>
+                    <TableCell className="font-semibold flex space-x-4 justify-end">
                       <button
                         onClick={() => {
-                          setCurrentCategory(item);
+                          setCurrentProduct(item);
                           setOpen(true);
                         }}
                       >
@@ -108,7 +116,7 @@ const page = () => {
                         />
                       </button>
 
-                      <button onClick={() => handleDelete(item, index)}>
+                      <button onClick={() => handleDelete(item, item.id)}>
                         <BaseIcon
                           name="delete"
                           width={24}
@@ -124,10 +132,11 @@ const page = () => {
           </>
         )}
 
-        <CategoryForm
+        <ProductForm
           open={open}
           setOpen={setOpen}
-          category={currentCategory}
+          product={currentProduct ? currentProduct : undefined}
+          categories={categories}
         />
       </div>
     </div>
