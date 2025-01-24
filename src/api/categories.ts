@@ -13,3 +13,18 @@ export const useCategories = () => {
   });
 };
 
+
+export const createCategory = async (body: {name: string}): Promise<any> => {
+  const response = await axiosInstance.post(`/products/add`, body);
+  return response;
+};
+
+export const editCategory = async (body: {name: string}): Promise<any> => {
+  const response = await axiosInstance.post(`/products/add`, body);
+  return response;
+};
+
+export const deleteCategory = async (id: number): Promise<any> => {
+  const response = await axiosInstance.delete(`/products/${id}`);
+  return response;
+};

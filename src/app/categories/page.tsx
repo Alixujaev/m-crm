@@ -1,5 +1,5 @@
 "use client";
-import { getCategories, useCategories } from "@/api/categories";
+import { deleteCategory, getCategories, useCategories } from "@/api/categories";
 import {
   Table,
   TableBody,
@@ -8,18 +8,51 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Loader from "../(components)/Loader";
 import NoList from "../(components)/NoList";
 import toast from "react-hot-toast";
 import BaseIcon from "@/components/icons/BaseIcon";
+import CategoryForm from "../(components)/CategoryForm";
+import { useMainState } from "@/lib/store";
+import { useMutation } from "@tanstack/react-query";
 
 const page = () => {
+  const { categories, setCategories, removeCategory } = useMainState();
+  const [currentCategory, setCurrentCategory] = useState<string>("");
   const { data, isLoading, error } = useCategories();
-
+  const [open, setOpen] = useState<boolean>(false);
   if (error) {
     toast.error("Произошла ошибка при получении категорий");
+  }
+
+  const mutation = useMutation({
+    mutationFn: (id: number) => deleteCategory(id + 1),
+    onSuccess: () => {
+      removeCategory(currentCategory);
+      setCurrentCategory("");
+      toast.success("Категория успешно удалена");
+    },
+    onError: () => {
+      toast.error("Произошла ошибка при удалении категории");
+    },
+  });
+
+  useEffect(() => {
+    if (data) {
+      setCategories(data);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (!open) {
+      setCurrentCategory("");
+    }
+  }, [open]);
+
+  function handleDelete(item: string, id: number) {
+    setCurrentCategory(item);
+    mutation.mutate(Number(id));
   }
 
   return (
@@ -27,14 +60,17 @@ const page = () => {
       <h2 className="text-3xl font-semibold mb-8">Категории </h2>
       <div className="bg-white border border-[#E5E7EB] rounded-xl min-h-screen">
         <div className="py-3 px-6 border-b border-[#E5E7EB] flex justify-end items-center">
-          <button className="bg-[#28b392] hover:bg-[#28b392] text-white px-4 py-2 rounded-md">
-            Create new store
+          <button
+            onClick={() => setOpen(true)}
+            className="bg-[#28b392] hover:bg-[#28b392] text-white px-4 py-2 rounded-md"
+          >
+            Создать категорию
           </button>
         </div>
 
         {isLoading ? (
           <Loader className="h-[calc(100vh-200px)]" />
-        ) : data && data.length === 0 ? (
+        ) : categories && categories.length === 0 ? (
           <NoList className="h-[calc(100vh-200px)]" />
         ) : (
           <>
@@ -47,7 +83,7 @@ const page = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {data?.map((item: string, index: number) => (
+                {categories?.map((item: string, index: number) => (
                   <TableRow key={index}>
                     <TableCell className="font-semibold">{index + 1}</TableCell>
                     <TableCell className="font-semibold w-full text-center">
@@ -55,7 +91,12 @@ const page = () => {
                     </TableCell>
 
                     <TableCell className="font-semibold flex space-x-4">
-                      <button>
+                      <button
+                        onClick={() => {
+                          setCurrentCategory(item);
+                          setOpen(true);
+                        }}
+                      >
                         <BaseIcon
                           name="edit"
                           width={24}
@@ -64,7 +105,7 @@ const page = () => {
                         />
                       </button>
 
-                      <button>
+                      <button onClick={() => handleDelete(item, index)}>
                         <BaseIcon
                           name="delete"
                           width={24}
@@ -79,6 +120,12 @@ const page = () => {
             </Table>
           </>
         )}
+
+        <CategoryForm
+          open={open}
+          setOpen={setOpen}
+          category={currentCategory}
+        />
       </div>
     </div>
   );
