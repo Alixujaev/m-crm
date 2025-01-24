@@ -15,7 +15,7 @@ const ProductCard = ({
   product: ProductType;
   isCart?: boolean;
 }) => {
-  const { cartProductIds, addIdToCart, removeIdFromCart } = useMainState();
+  const { cartProducts, addProductToCart, removeIdFromCart } = useMainState();
 
   const addMutation = useMutation({
     mutationFn: (data: ProductType) => addToCart(data),
@@ -34,13 +34,13 @@ const ProductCard = ({
       toast.success("Продукт успешно удален из корзины");
     },
     onError: () => {
-      addIdToCart(product.id);
+      addProductToCart(product);
       toast.error("Произошла ошибка при удалении продукта из корзины");
     },
   });
 
   const handleAddToCart = (product: ProductType) => {
-    addIdToCart(product.id);
+    addProductToCart(product);
     addMutation.mutate(product);
   };
 
@@ -48,12 +48,6 @@ const ProductCard = ({
     removeIdFromCart(product.id);
     removeMutation.mutate(product);
   };
-
-  useEffect(() => {
-    if (isCart) {
-      addIdToCart(product.id);
-    }
-  }, [isCart]);
 
   return (
     <div className="shadow rounded-[8px] w-auto relative">
@@ -70,7 +64,7 @@ const ProductCard = ({
         <h2 className="font-semibold text-xl mb-2">{product.title}</h2>
         <p className="text-[#4B5563] mb-16">{product.description}</p>
 
-        {cartProductIds.includes(product.id) ? (
+        {cartProducts.includes(product) ? (
           <button
             onClick={() => handleRemoveFromCart(product)}
             className="absolute bottom-0 text-center w-full py-3 bg-[#FF5C5C] text-white left-0 rounded-b-[8px]"

@@ -6,7 +6,7 @@ export default async function Home() {
   return (
     <div>
       <h2 className="text-3xl font-semibold mb-8">Товары</h2>
-      <ProductList initialData={products} />
+      <ProductList initialData={products.products} />
     </div>
   );
 }

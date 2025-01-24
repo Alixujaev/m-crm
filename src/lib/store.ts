@@ -3,15 +3,15 @@ import { create } from "zustand";
 import { ProductType } from "./types";
 
 type MainState = {
-  cartProductIds: number[];
-  addIdToCart: (productId: number) => void;
+  cartProducts: ProductType[];
+  addProductToCart: (product: ProductType) => void;
   removeIdFromCart: (productId: number) => void;
   clearCart: () => void;
 };
 
 export const useMainState = create<MainState>((set) => ({
-  cartProductIds: [],
-  addIdToCart: (productId) => set((state) => ({ cartProductIds: [...state.cartProductIds, productId] })),
-  removeIdFromCart: (productId) => set((state) => ({ cartProductIds: state.cartProductIds.filter((id) => id !== productId) })),
-  clearCart: () => set({ cartProductIds: [] }),
+  cartProducts: [],
+  addProductToCart: (product) => set((state) => ({ cartProducts: [...state.cartProducts, product] })),
+  removeIdFromCart: (productId) => set((state) => ({ cartProducts: state.cartProducts.filter((item) => item.id !== productId) })),
+  clearCart: () => set({ cartProducts: [] }),
 }));
