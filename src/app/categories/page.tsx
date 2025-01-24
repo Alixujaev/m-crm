@@ -53,7 +53,6 @@ const Categories = () => {
   }, [open]);
 
   function handleDelete(item: string, id: number) {
-    setCurrentCategory(item);
     removeCategory(item);
     mutation.mutate(Number(id));
   }
