@@ -1,5 +1,5 @@
 "use client";
-import { deleteCategory, useCategories } from "@/api/categories";
+import { useCategories } from "@/api/categories";
 import {
   Table,
   TableBody,
@@ -19,13 +19,13 @@ import { ProductType } from "@/lib/types";
 import BaseIcon from "@/components/icons/BaseIcon";
 import ProductForm from "../(components)/ProductForm";
 
-const page = () => {
+const Products = () => {
   const { products, setProducts, removeProduct, addProduct } = useMainState();
   const [currentProduct, setCurrentProduct] = useState<ProductType | null>(
     null
   );
   const { data, isLoading, error } = useProducts();
-  const { data: categories, isLoading: loadingCategories } = useCategories();
+  const { data: categories } = useCategories();
   const [open, setOpen] = useState<boolean>(false);
   if (error) {
     toast.error("Произошла ошибка при получении категорий");
@@ -58,7 +58,6 @@ const page = () => {
   }, [open]);
 
   function handleDelete(item: ProductType, id: number) {
-    setCurrentProduct(item);
     removeProduct(item);
     mutation.mutate(Number(id));
   }
@@ -136,11 +135,11 @@ const page = () => {
           open={open}
           setOpen={setOpen}
           product={currentProduct ? currentProduct : undefined}
-          categories={categories}
+          categories={categories ? categories : []}
         />
       </div>
     </div>
   );
 };
 
-export default page;
+export default Products;

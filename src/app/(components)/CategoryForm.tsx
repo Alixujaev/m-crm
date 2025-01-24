@@ -102,7 +102,7 @@ const CategoryForm = ({
               {form.formState.errors.name?.message}
             </p>
             {category ? (
-              <div>
+              <div className="flex gap-4">
                 <button
                   disabled={mutationEdit.isPending}
                   className={`bg-[#28b392] hover:bg-[#28b392] text-white px-4 py-2 rounded-md w-full ${

@@ -1,9 +1,9 @@
 import axiosInstance from "@/lib/fetch";
-import { ProductType } from "@/lib/types";
+import { ProductType, ProductsResponseType } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 
-export const getAllProducts = async (): Promise<any> => {
-  const response = await axiosInstance.get(`/products`);
+export const getAllProducts = async (): Promise<ProductsResponseType> => {
+  const response:ProductsResponseType = await axiosInstance.get(`/products`);
   return response;
 };
 
@@ -14,17 +14,17 @@ export const useProducts = () => {
   });
 };
 
-export const createProduct = async (body: Omit<ProductType, "id">): Promise<any> => {
-  const response = await axiosInstance.post(`/products/add`, body);
+export const createProduct = async (body: Omit<ProductType, "id">): Promise<ProductType> => {
+  const response:ProductType = await axiosInstance.post(`/products/add`, body);
   return response;
 };
 
-export const editProduct = async (body: Omit<ProductType, "id">): Promise<any> => {
-  const response = await axiosInstance.put(`/products/1`, body);
+export const editProduct = async (body: Omit<ProductType, "id">): Promise<ProductType> => {
+  const response:ProductType = await axiosInstance.put(`/products/1`, body);
   return response;
 };
 
-export const deleteProduct = async (id: number): Promise<any> => {
-  const response = await axiosInstance.delete(`/products/${id}`);
+export const deleteProduct = async (id: number): Promise<ProductType> => {
+  const response:ProductType = await axiosInstance.delete(`/products/${id}`);
   return response;
 };

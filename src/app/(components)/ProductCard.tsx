@@ -5,12 +5,11 @@ import { useMainState } from "@/lib/store";
 import { ProductType } from "@/lib/types";
 import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import toast from "react-hot-toast";
 
 const ProductCard = ({
   product,
-  isCart,
 }: {
   product: ProductType;
   isCart?: boolean;

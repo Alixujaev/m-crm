@@ -1,9 +1,11 @@
 import axiosInstance from "@/lib/fetch";
-import { ProductType } from "@/lib/types";
+import { CartProductsResponseType, ProductType } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 
-export const getCartProducts = async (): Promise<any> => {
-  const response = await axiosInstance.get(`/carts/1`);
+
+
+export const getCartProducts = async (): Promise<CartProductsResponseType> => {
+  const response: CartProductsResponseType = await axiosInstance.get(`/carts/1`);
   return response;
 };
 

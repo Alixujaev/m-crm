@@ -1,5 +1,5 @@
 "use client";
-import { deleteCategory, getCategories, useCategories } from "@/api/categories";
+import { deleteCategory, useCategories } from "@/api/categories";
 import {
   Table,
   TableBody,
@@ -17,7 +17,7 @@ import CategoryForm from "../(components)/CategoryForm";
 import { useMainState } from "@/lib/store";
 import { useMutation } from "@tanstack/react-query";
 
-const page = () => {
+const Categories = () => {
   const { categories, setCategories, removeCategory, addCategory } =
     useMainState();
   const [currentCategory, setCurrentCategory] = useState<string>("");
@@ -134,4 +134,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Categories;

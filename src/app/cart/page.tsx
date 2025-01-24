@@ -3,15 +3,15 @@ import React from "react";
 import ProductList from "../(components)/ProductList";
 import { useMainState } from "@/lib/store";
 
-const page = () => {
+const Cart = () => {
   const { cartProducts } = useMainState();
 
   return (
     <div>
       <h2 className="text-3xl font-semibold mb-8">Товары в корзине</h2>
-      <ProductList initialData={cartProducts} isCart />
+      <ProductList initialData={cartProducts} />
     </div>
   );
 };
 
-export default page;
+export default Cart;

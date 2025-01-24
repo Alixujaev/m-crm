@@ -11,3 +11,16 @@ export type ProductType = {
   description: string;
   category: string;
 }
+
+
+export type CartProductsResponseType = {
+  id: number;
+  products: ProductType[]
+}
+
+export type ProductsResponseType = {
+  products: ProductType[]
+  total: number;
+  skip: number;
+  limit: number;
+}

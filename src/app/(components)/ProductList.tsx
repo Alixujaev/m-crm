@@ -1,18 +1,18 @@
 import React from "react";
 import ProductCard from "./ProductCard";
+import { ProductType } from "@/lib/types";
 
 const ProductList = ({
   initialData,
-  isCart,
 }: {
-  initialData: any;
+  initialData: ProductType[];
   isCart?: boolean;
 }) => {
   return initialData?.length > 0 ? (
     <div>
       <div className="grid grid-cols-4 gap-4">
-        {initialData?.map((product: any) => (
-          <ProductCard key={product.id} product={product} isCart={isCart} />
+        {initialData?.map((product: ProductType) => (
+          <ProductCard key={product.id} product={product} />
         ))}
       </div>
     </div>

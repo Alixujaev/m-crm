@@ -4,8 +4,8 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { CategorySchema, ProductSchema } from "@/lib/schemas";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { ProductSchema } from "@/lib/schemas";
+import React, { Dispatch, SetStateAction, useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
